@@ -1,5 +1,6 @@
 #include <FileReciever/Server.h>
 
+#include <filesystem>
 #include <fstream>
 #include <grpcpp/grpcpp.h>
 #include <sender.grpc.pb.h>
@@ -23,6 +24,18 @@ class SenderServiceImpl final : public SenderService::Service {
              data->remain_size());
         m_current_file = data->name();
         m_remaining_size = data->remain_size();
+        try {
+            namespace fs = std::filesystem;
+            auto path = fs::path(m_current_file).remove_filename();
+            if (!path.empty()) fs::create_directories(path);
+
+        } catch (std::runtime_error &err) {
+            LOGE("Couldnot create directory to save file");
+            CloseNStop();
+            return {grpc::StatusCode::ABORTED,
+                    "Server couldnot create directory for file"};
+        }
+
         m_out = std::ofstream(data->name(),
                               std::ios::binary | std::ios::trunc);
 
@@ -42,6 +55,7 @@ class SenderServiceImpl final : public SenderService::Service {
         if (m_remaining_size <= 0) {
             CloseNStop();
             response->set_status("Done");
+            LOGI("Done recieving");
         } else {
             response->set_status("Continue");
         }
