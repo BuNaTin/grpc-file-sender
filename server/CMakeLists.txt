@@ -8,4 +8,4 @@ target_sources(${ServerProject} PRIVATE
     src/FileReciever/Server.cpp
 )
 
-target_link_libraries(${ServerProject} PUBLIC ${CORE_LIB})
+target_link_libraries(${ServerProject} PRIVATE ${CORE_LIB})

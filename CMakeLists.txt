@@ -78,3 +78,4 @@ set(CORE_LIB
 
 # Executables
 add_subdirectory(server)
+add_subdirectory(client)

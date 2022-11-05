@@ -14,10 +14,13 @@ class SenderServiceImpl final : public SenderService::Service {
                     const FileInfo *data,
                     UploadFileResponse *response) override {
         if (m_remaining_size != 0 && !m_current_file.empty()) {
-            std::cout << "Server is busy loading other file\n";
+            LOGI("Server is busy loading other file");
             return {grpc::StatusCode::ABORTED,
                     "Server is busy loading other file"};
         }
+        LOGI("Open {} file to recieve, bytes size {}",
+             data->name(),
+             data->remain_size());
         m_current_file = data->name();
         m_remaining_size = data->remain_size();
         m_out = std::ofstream(data->name(),
@@ -67,8 +70,9 @@ private:
     long long m_remaining_size = 0;
 };
 
-void RunServer(const std::string& address, u16 port) {
-    const std::string server_address(address + ':' + std::to_string(port));
+void RunServer(const std::string &address, u16 port) {
+    const std::string server_address(address + ':' +
+                                     std::to_string(port));
     SenderServiceImpl service;
 
     grpc::EnableDefaultHealthCheckService(true);
