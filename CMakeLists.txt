@@ -71,4 +71,4 @@ target_link_libraries(${ProtoGen}
 )
 
 # Executables
-# empty yet
+add_subdirectory(server)
