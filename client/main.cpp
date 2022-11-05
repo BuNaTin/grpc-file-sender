@@ -67,6 +67,10 @@ int main(int argc, char *argv[]) {
     cl_settings.address = arg_parser.get<std::string>(ARG_ADDRESS);
     cl_settings.port = arg_parser.get<int>(ARG_PORT);
     auto client = FileSender::Client::create(cl_settings);
+    if(!client) {
+        LOGE("Could not create client");
+        return 1;
+    }
 
     if (send.is_used(ARG_SEND_ABORT)) {
         client->sendAbort();
