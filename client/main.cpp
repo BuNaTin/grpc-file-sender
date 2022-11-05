@@ -67,13 +67,23 @@ int main(int argc, char *argv[]) {
     cl_settings.address = arg_parser.get<std::string>(ARG_ADDRESS);
     cl_settings.port = arg_parser.get<int>(ARG_PORT);
     auto client = FileSender::Client::create(cl_settings);
+    if (!client) {
+        LOGE("Could not create client");
+        return 1;
+    }
 
     if (send.is_used(ARG_SEND_ABORT)) {
-        client->sendAbort();
+        if (!client->sendAbort()) {
+            LOGE("Could not send abort to server");
+            return 1;
+        }
     }
     if (send.is_used(ARG_SEND_FILE)) {
         std::string filename = send.get<std::string>(ARG_SEND_FILE);
-        client->sendFile(filename);
+        if (!client->sendFile(filename)) {
+            LOGE("Could not send file to server");
+            return 1;
+        }
     }
 
     return 0;

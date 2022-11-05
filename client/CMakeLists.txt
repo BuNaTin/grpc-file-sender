@@ -1,4 +1,4 @@
-set(ClientProject client_project)
+set(ClientProject fs_client)
 
 add_executable(${ClientProject} main.cpp)
 

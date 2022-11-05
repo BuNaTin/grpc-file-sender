@@ -1,8 +1,9 @@
 #include <FileSender/Client.hpp>
 
 #include <Logger.h>
-#include <fstream>
+#include <arpa/inet.h>
 #include <filesystem>
+#include <fstream>
 #include <grpcpp/grpcpp.h>
 #include <sender.grpc.pb.h>
 
@@ -17,6 +18,12 @@ inline bool sendFileName(SenderService::Stub *stub,
     info.set_remain_size(std::filesystem::file_size(filename));
     grpc::Status status = stub->StartUploadFile(&context, info, &resp);
     return status.ok();
+}
+
+inline bool validateIp(const std::string &address) {
+    struct sockaddr_in sa;
+    int result = inet_pton(AF_INET, address.c_str(), &(sa.sin_addr));
+    return result > 0;
 }
 
 } // namespace
@@ -39,6 +46,11 @@ private:
 
 std::unique_ptr<Client>
 Client::create(const Client::Settings &settings) {
+    if(!validateIp(settings.address)) {
+        LOGE("Wrong ip {} to client", settings.address);
+        return nullptr;
+    }
+
     return std::make_unique<ClientImpl>(settings);
 }
 
