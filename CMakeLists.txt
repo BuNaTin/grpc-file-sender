@@ -70,5 +70,11 @@ target_link_libraries(${ProtoGen}
     CONAN_PKG::grpc
 )
 
+set(CORE_LIB 
+    ${ProtoGen}
+    CONAN_PKG::spdlog
+    CONAN_PKG::argparse
+)
+
 # Executables
 add_subdirectory(server)

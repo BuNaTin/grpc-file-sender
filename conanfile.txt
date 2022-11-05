@@ -1,5 +1,7 @@
 [requires]
 grpc/1.40.0
+argparse/2.9
+spdlog/1.10.0
 
 [generators]
 cmake_find_package
