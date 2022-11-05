@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+service SenderService {
+  rpc StartUploadFile(FileInfo) returns (UploadFileResponse) {};
+  rpc UploadChunk(FileData) returns (UploadFileResponse) {};
+  rpc AbortLoading(Empty) returns (UploadFileResponse) {};
+}
+
+message FileInfo {
+  string name = 1;
+  uint32 remain_size = 2;
+}
+
+message FileData {
+  bytes chunk = 1;
+}
+
+message Empty {
+
+}
+
+message UploadFileResponse {
+  string status = 1;
+}
