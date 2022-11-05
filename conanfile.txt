@@ -1,0 +1,12 @@
+[requires]
+grpc/1.40.0
+argparse/2.9
+spdlog/1.10.0
+
+[generators]
+cmake_find_package
+cmake_paths
+
+[imports]
+bin, protoc* -> ./build_tools
+bin, grpc_cpp_plugin* -> ./build_tools
