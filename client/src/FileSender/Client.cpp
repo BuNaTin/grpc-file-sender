@@ -85,12 +85,13 @@ bool ClientImpl::sendFile(const std::string &filename) noexcept {
         grpc::ClientContext context;
         FileData payload;
         payload.set_chunk({data.begin(), end});
-        LOGI("Send {}", std::string(data.begin(), end));
+        LOGI("Send {} bytes", bytes_read);
         status = m_stub->UploadChunk(&context, payload, &response);
         should_end = !status.ok();
     }
+    LOGI("Send done");
 
-    return true;
+    return status.ok();
 }
 
 bool ClientImpl::sendAbort() noexcept {
